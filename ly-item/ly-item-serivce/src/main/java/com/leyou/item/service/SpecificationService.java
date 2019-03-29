@@ -20,7 +20,7 @@ public class SpecificationService {
         specGroup.setCid(cid);
         List<SpecGroup> specGroups = specGroupMapper.select(specGroup);
         if (CollectionUtils.isEmpty(specGroups)) {
-            throw new LyException(ExceptionEnums.BRAND_SAVE_ERROR);
+            throw new LyException(ExceptionEnums.SPEC_GROUP_SAVE_ERROR);
         }
         return specGroups;
     }

@@ -2,7 +2,7 @@ server:
   port: 8082
 spring:
   application:
-    name: upload-service
+    name: ly-upload
   servlet:
     multipart:
       max-file-size: 100MB
@@ -15,7 +15,7 @@ eureka:
     instance-id: ${spring.application.name}:${server.port}
     prefer-ip-address: true     #访问路径可以显示IP地址
 info:
-  app.name: ly-search
+  app.name: ly-upload
   company.name: www.leyou.com
   build.artifactId: $project.artifactId$
   build.version: $project.version$

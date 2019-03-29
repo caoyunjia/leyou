@@ -13,11 +13,6 @@
     <artifactId>ly-upload</artifactId>
 
     <dependencies>
-        <!--所需的web环境-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <!--Eureka客户端-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

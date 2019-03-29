@@ -38,10 +38,7 @@ public class UploadService {
                 throw new LyException(ExceptionEnums.INVALID_FILE_ERROR);
             }
             //获取文件后缀名
-            String name = file.getName();
-            String originalFilename = file.getOriginalFilename();
             String fileExtensionName = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
-
 
             String uploadFileName = UUID.randomUUID().toString()+"."+fileExtensionName;
 

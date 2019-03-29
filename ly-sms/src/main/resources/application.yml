@@ -1,13 +1,8 @@
 server:
-  port: 8001
+  port: 8086
 spring:
   application:
-    name: ly-item
-  datasource:
-    url: jdbc:mysql://47.98.114.21:3306/leyou
-    username: root
-    password: 123456
-
+    name: ly-sms
 eureka:
   client:
     service-url:
@@ -15,12 +10,9 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${server.port}
     prefer-ip-address: true     #访问路径可以显示IP地址
-
 info:
-  app.name: ly-item
+  app.name: ly-sms
   company.name: www.leyou.com
   build.artifactId: $project.artifactId$
   build.version: $project.version$
-mybatis:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
