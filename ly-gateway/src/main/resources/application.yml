@@ -1,0 +1,39 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: api-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+info:
+  app.name: ly-gateway
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+zuul:
+  #添加路由前缀
+  prefix: /api
+  routes:
+    item-service: /item/**
+    upload-service:
+      serviceId: upload-service
+      path: /upload/**
+      stripPrefix: false
+ribbon:
+  ConnectTimeout: 2000 # 连接超时时间(ms)
+  ReadTimeout: 3500 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 6000 # 熔断超时时长：5000ms

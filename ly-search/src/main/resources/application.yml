@@ -1,0 +1,21 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: ly-search
+  datasource:
+    url: jdbc:mysql://47.98.114.21:3306/leyou?characterEncoding=utf-8
+    name: root
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true     #访问路径可以显示IP地址
+info:
+  app.name: ly-search
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$

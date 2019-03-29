@@ -1,0 +1,34 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: upload-service
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true     #访问路径可以显示IP地址
+info:
+  app.name: ly-search
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+ly:
+  upload:
+     baseUrl: http://image.leyouMall.com
+     allowTypes:
+        - image/jpeg
+        - image/png
+        - image/bmp
+     ftp:
+        username: ftpuser
+        password: 123456
+        host: 47.98.114.21
+        port: 21
