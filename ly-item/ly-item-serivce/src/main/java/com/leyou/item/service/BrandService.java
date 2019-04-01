@@ -63,7 +63,7 @@ public class BrandService {
         }
         //新增中间表
         brandVo.getCategories().forEach(cid->{
-            int i = brandMapper.insertCategoryBrand(cid, brandVo.getId());
+            int i = brandMapper.insertCategoryBrand(cid, brand.getId());
             if(i!=1){
                 throw new LyException(ExceptionEnums.BRAND_SAVE_ERROR);
             }
