@@ -22,7 +22,7 @@ info:
 
 ly:
   upload:
-     baseUrl: http://image.leyouMall.com
+     baseUrl: http://47.98.114.21
      allowTypes:
         - image/jpeg
         - image/png

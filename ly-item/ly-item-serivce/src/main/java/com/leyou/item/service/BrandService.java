@@ -56,7 +56,7 @@ public class BrandService {
         brand.setId(null);
         brand.setName(brandVo.getName());
         brand.setLetter(brandVo.getLetter());
-        brandVo.setImage(brandVo.getImage());
+        brand.setImage(brandVo.getImage());
         int count = brandMapper.insert(brand);
         if(count!=1){
             throw new LyException(ExceptionEnums.BRAND_SAVE_ERROR);
