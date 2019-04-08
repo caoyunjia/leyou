@@ -20,8 +20,16 @@ public class SpecificationService {
         specGroup.setCid(cid);
         List<SpecGroup> specGroups = specGroupMapper.select(specGroup);
         if (CollectionUtils.isEmpty(specGroups)) {
-            throw new LyException(ExceptionEnums.SPEC_GROUP_SAVE_ERROR);
+            throw new LyException(ExceptionEnums.SPEC_GROUP_NOT_FOUND);
         }
         return specGroups;
+    }
+
+    public void saveSpecGroup(SpecGroup specGroup) {
+        specGroup.setId(null);
+        int count = specGroupMapper.insert(specGroup);
+        if(count!=1){
+            throw new LyException(ExceptionEnums.SPEC_GROUP_SAVE_ERROR);
+        }
     }
 }

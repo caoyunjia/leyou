@@ -50,8 +50,6 @@ public class BrandService {
      * @param brandVo
      */
     public void saveBrand(BrandVo brandVo) {
-        brandVo.setId(null);
-
         Brand brand = new Brand();
         brand.setId(null);
         brand.setName(brandVo.getName());
