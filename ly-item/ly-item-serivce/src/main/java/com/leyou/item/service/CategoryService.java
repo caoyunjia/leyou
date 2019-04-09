@@ -24,4 +24,13 @@ public class CategoryService {
         }
         return categories;
     }
+
+
+    public List<Category> queryCategoryListByIds(List<Long> ids){
+        List<Category> categories = categoryMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(categories)) {
+            throw new LyException(ExceptionEnums.CATEGORY_NOT_FOUND);
+        }
+        return categories;
+    }
 }

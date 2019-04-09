@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
+
 import java.util.List;
 
 @Service
@@ -27,26 +28,27 @@ public class BrandService {
         PageHelper.startPage(page, rows);
         Example example = new Example(Brand.class);
         if (StringUtils.isNotBlank(key)) {
-            example.createCriteria().andLike("name","%"+key+"%").orEqualTo("letter",key.toUpperCase());
+            example.createCriteria().andLike("name", "%" + key + "%").orEqualTo("letter", key.toUpperCase());
         }
         //如果没有排序
         if (StringUtils.isNotBlank(sortBy)) {
-            String orderByClause=sortBy+(desc?" DESC":" ASC");
+            String orderByClause = sortBy + (desc ? " DESC" : " ASC");
             example.setOrderByClause(orderByClause);
         }
         List<Brand> brands = brandMapper.selectByExample(example);
 
         PageInfo<Brand> pageInfo = new PageInfo<>(brands);
         //如果集合为空
-        if(CollectionUtils.isEmpty(brands)){
+        if (CollectionUtils.isEmpty(brands)) {
             throw new LyException(ExceptionEnums.BRAND_NOT_FOUND);
         }
 
-        return new PageResult<>(pageInfo.getTotal(),pageInfo.getList());
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
     }
 
     /**
      * 保存品牌
+     *
      * @param brandVo
      */
     public void saveBrand(BrandVo brandVo) {
@@ -56,18 +58,25 @@ public class BrandService {
         brand.setLetter(brandVo.getLetter());
         brand.setImage(brandVo.getImage());
         int count = brandMapper.insert(brand);
-        if(count!=1){
+        if (count != 1) {
             throw new LyException(ExceptionEnums.BRAND_SAVE_ERROR);
         }
         //新增中间表
-        brandVo.getCategories().forEach(cid->{
+        brandVo.getCategories().forEach(cid -> {
             int i = brandMapper.insertCategoryBrand(cid, brand.getId());
-            if(i!=1){
+            if (i != 1) {
                 throw new LyException(ExceptionEnums.BRAND_SAVE_ERROR);
             }
         });
 
+    }
 
+    public Brand queryBrandById(Long id) {
+        Brand brand = brandMapper.selectByPrimaryKey(id);
+        if (brand == null) {
+            throw new LyException(ExceptionEnums.BRAND_NOT_FOUND);
+        }
+        return brand;
 
     }
 }
