@@ -55,4 +55,15 @@ public class SpecificationService {
             throw new LyException(ExceptionEnums.SPEC_PARAM_SAVE_ERROR);
         }
     }
+
+    public List<SpecParam> queryParamsByCid(Long cid) {
+
+        SpecParam specParam = new SpecParam();
+        specParam.setCid(cid);
+        List<SpecParam> specParams = specParamMapper.select(specParam);
+        if (CollectionUtils.isEmpty(specParams)) {
+            throw new LyException(ExceptionEnums.SPEC_PARAM_NOT_FOUND);
+        }
+        return specParams;
+    }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequestMapping("brand")
 @RestController
@@ -29,6 +31,12 @@ public class BrandController {
         return ResponseEntity.ok(result);
     }
 
+
+    @GetMapping("cid/{cid}")
+    public ResponseEntity<List<Brand>> queryBrandByPage(@PathVariable(name = "cid") Long cid){
+
+        return ResponseEntity.ok(brandService.queryBrandsByCid(cid));
+    }
 
     @PostMapping
     public ResponseEntity<Void> save(BrandVo brandVo) {

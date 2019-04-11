@@ -24,7 +24,7 @@ public class SpecificationController {
     }
 
     @GetMapping(value = "/params/{gid}")
-    public ResponseEntity<List<SpecParam>> queryParamsByCid(@PathVariable(value = "gid")Long gid){
+    public ResponseEntity<List<SpecParam>> queryParamsByGid(@PathVariable(value = "gid")Long gid){
 
         List<SpecParam> specParams=specificationService.queryParamsByGid(gid);
         return ResponseEntity.ok(specParams);
@@ -53,5 +53,11 @@ public class SpecificationController {
     }
 
 
+    @GetMapping("/{cid}")
+    public ResponseEntity<List<SpecParam>> queryParamsByCid(@PathVariable(value = "cid") Long cid){
+
+        List<SpecParam> specParams=specificationService.queryParamsByCid(cid);
+        return ResponseEntity.ok(specParams);
+    }
 
 }

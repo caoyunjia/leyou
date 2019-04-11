@@ -23,6 +23,7 @@ public class BrandService {
     @Autowired
     private BrandMapper brandMapper;
 
+
     public PageResult<Brand> queryBrandByPage(Integer page, Integer rows, String sortBy, Boolean desc, String key) {
 
         PageHelper.startPage(page, rows);
@@ -78,5 +79,13 @@ public class BrandService {
         }
         return brand;
 
+    }
+
+    public List<Brand> queryBrandsByCid(Long cid) {
+        List<Brand> brands = brandMapper.queryBrandsByCid(cid);
+        if (CollectionUtils.isEmpty(brands)) {
+            throw new LyException(ExceptionEnums.BRAND_NOT_FOUND);
+        }
+        return brands;
     }
 }

@@ -3,14 +3,15 @@ server:
 spring:
   application:
     name: ly-search
-  datasource:
-    url: jdbc:mysql://47.98.114.21:3306/leyou?characterEncoding=utf-8
-    name: root
-    password: 123456
+  data:
+    elasticsearch:
+       cluster-name: elasticsearch
+       clusterNodes: 47.98.114.21:9300
 eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
   instance:
     instance-id: ${spring.application.name}:${server.port}
     prefer-ip-address: true     #访问路径可以显示IP地址
