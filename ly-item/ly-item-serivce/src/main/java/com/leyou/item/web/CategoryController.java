@@ -25,4 +25,10 @@ public class CategoryController {
 
     }
 
+
+    @GetMapping("list/ids")
+    public ResponseEntity<List<Category>> queryCategoryListByPid(List<Long> ids) {
+
+        return ResponseEntity.ok(categoryService.queryCategoryListByIds(ids));
+    }
 }
