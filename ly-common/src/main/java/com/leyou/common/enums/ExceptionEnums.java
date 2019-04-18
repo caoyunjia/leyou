@@ -14,6 +14,7 @@ public enum  ExceptionEnums {
     SPEC_GROUP_NOT_FOUND(400,"商品规格组不存在" ),
     SPEC_PARAM_NOT_FOUND(400,"商品规格参数不存在" ),
     BRAND_SAVE_ERROR(500,"品牌新增失败" ),
+    GOODS_SAVE_ERROR(500,"商品新增失败" ),
     SPEC_GROUP_SAVE_ERROR(500,"商品规格组新增失败" ),
     SPEC_PARAM_SAVE_ERROR(500,"商品规格参数新增失败" ),
     UPLOAD_FILE_ERROR(500,"文件上传失败" ),

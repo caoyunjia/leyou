@@ -2,6 +2,7 @@ package com.leyou.item.pojo;
 
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
 @Data
 public class Spu {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @KeySql(useGeneratedKeys = true)
     private Long id;
     private Long brandId;
     private Long cid1;// 1级类目
