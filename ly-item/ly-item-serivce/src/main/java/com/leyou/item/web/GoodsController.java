@@ -5,6 +5,7 @@ import com.leyou.item.pojo.Spu;
 import com.leyou.item.service.SpuService;
 import com.leyou.item.vo.GoodsVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ public class GoodsController {
     public ResponseEntity<Void> saveGoods(GoodsVO goodsVO){
 
         spuService.saveGoods(goodsVO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }
