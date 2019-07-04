@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("spec")
+@RequestMapping("/spec")
 public class SpecificationController {
     @Autowired
     private SpecificationService specificationService;
@@ -54,7 +54,7 @@ public class SpecificationController {
 
 
     @GetMapping("/params")
-    public ResponseEntity<List<SpecParam>> queryParamsByCid(Long cid){
+    public ResponseEntity<List<SpecParam>> queryParamsByCid(@RequestParam(value = "cid") Long cid){
 
         List<SpecParam> specParams=specificationService.queryParamsByCid(cid);
         return ResponseEntity.ok(specParams);
