@@ -1,21 +1,22 @@
 package com.leyou.item.web;
 
 import com.leyou.common.vo.PageResult;
+import com.leyou.item.pojo.Sku;
 import com.leyou.item.pojo.Spu;
-import com.leyou.item.service.SpuService;
+import com.leyou.item.pojo.SpuDetail;
+import com.leyou.item.service.GoodsService;
 import com.leyou.item.vo.GoodsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class GoodsController {
     @Autowired
-    private SpuService spuService;
+    private GoodsService goodsService;
 
     @GetMapping("spu/page")
     public ResponseEntity<PageResult<Spu>> querySpuByPage(
@@ -25,16 +26,38 @@ public class GoodsController {
             @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
             @RequestParam(value = "key", required = false) String key,
             @RequestParam(value = "saleable", required = false) Boolean saleable) {
-        PageResult<Spu> pageResult = spuService.querySpusByPage(page, rows, sortBy, desc, key, saleable);
+        PageResult<Spu> pageResult = goodsService.querySpusByPage(page, rows, sortBy, desc, key, saleable);
         return ResponseEntity.ok(pageResult);
 
     }
 
     @PostMapping("goods")
-    public ResponseEntity<Void> saveGoods(GoodsVO goodsVO){
+    public ResponseEntity<Void> saveGoods(@RequestBody GoodsVO goodsVO){
 
-        spuService.saveGoods(goodsVO);
+        goodsService.saveGoods(goodsVO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PutMapping("goods")
+    public ResponseEntity<Void> updateGoods(@RequestBody GoodsVO goodsVO){
+
+        goodsService.updateGoods(goodsVO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+
+    @GetMapping("goods/spu/detail/{id}")
+    public ResponseEntity<SpuDetail> queryDetailById(@PathVariable(name = "id") Long spuId){
+        return ResponseEntity.ok(goodsService.queryDetailById(spuId));
+    }
+
+
+    @GetMapping("sku/list")
+    public ResponseEntity<List<Sku>> querySkuBySpuId(@RequestParam(value = "id") Long spuId){
+        return ResponseEntity.ok(goodsService.querySkuBySpuId(spuId));
+    }
+
+
 }
+

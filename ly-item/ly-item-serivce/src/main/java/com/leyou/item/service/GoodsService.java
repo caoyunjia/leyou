@@ -18,14 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class SpuService {
+public class GoodsService {
     @Autowired
     private SpuMapper spuMapper;
     @Autowired
@@ -61,7 +58,7 @@ public class SpuService {
         PageInfo<Spu> pageInfo = new PageInfo<>(spus);
         //如果集合为空
         if(CollectionUtils.isEmpty(spus)){
-            throw new LyException(ExceptionEnums.SPU_NOT_FOUND);
+            throw new LyException(ExceptionEnums.GOODS_NOT_FOUND);
         }
 
         return new PageResult<>(pageInfo.getTotal(),pageInfo.getList());
@@ -69,7 +66,7 @@ public class SpuService {
 
     private void loadCategoryAndBrandName(List<Spu> spus){
         for (Spu spu : spus) {
-            List<String> names = categoryService.queryCategoryListByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3())).stream().map(Category::getName).collect(Collectors.toList());
+            List<String> names = categoryService.queryCategoryByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3())).stream().map(Category::getName).collect(Collectors.toList());
             spu.setCname(StringUtils.join(names, "/"));
             spu.setBname(brandService.queryBrandById(spu.getBrandId()).getName());
         }
@@ -94,15 +91,24 @@ public class SpuService {
         spuDetail.setSpuId(spuId);
         spuDetailMapper.insert(spuDetail);
 
+       saveSkuAndStock(goodsVO);
+    }
+
+
+    /**
+     * 保存sku和stock
+     * @param goodsVO
+     */
+    private void saveSkuAndStock(GoodsVO goodsVO) {
         List<Sku> skus = goodsVO.getSkus();
         ArrayList<Stock> stocks = new ArrayList<>();
         for (Sku sku : skus) {
             //保存sku
             sku.setId(null);
-            sku.setSpuId(spuId);
+            sku.setSpuId(goodsVO.getId());
             sku.setCreateTime(goodsVO.getCreateTime());
             sku.setLastUpdateTime(goodsVO.getCreateTime());
-            count= skuMapper.insert(sku);
+            int count= skuMapper.insert(sku);
             if (count!=1) {
                 throw new LyException(ExceptionEnums.GOODS_SAVE_ERROR);
             }
@@ -112,10 +118,75 @@ public class SpuService {
             stock.setStock(sku.getStock());
             stocks.add(stock);
         }
-        count = stockMapper.insertList(stocks);
+        int count = stockMapper.insertList(stocks);
         if(count!=stocks.size()){
             throw new LyException(ExceptionEnums.GOODS_SAVE_ERROR);
         }
+    }
+
+
+    public SpuDetail queryDetailById(Long spuId) {
+        SpuDetail spuDetail = spuDetailMapper.selectByPrimaryKey(spuId);
+        if (spuDetail == null) {
+            throw new LyException(ExceptionEnums.GOODS_DETAIL_NOT_FOUND);
+        }
+        return spuDetail;
+    }
+
+
+    public List<Sku> querySkuBySpuId(Long spuId) {
+        Sku sku = new Sku();
+        sku.setSpuId(spuId);
+        List<Sku> skus = skuMapper.select(sku);
+        if (CollectionUtils.isEmpty(skus)) {
+            throw new LyException(ExceptionEnums.GOODS_SKU_NOT_FOUND);
+        }
+        List<Long> ids = skus.stream().map(Sku::getId).collect(Collectors.toList());
+        List<Stock> stocks = stockMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(skus)) {
+            throw new LyException(ExceptionEnums.GOODS_STOCK_NOT_FOUND);
+        }
+        Map<Long, Integer> stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
+        skus.forEach(s -> s.setStock(stockMap.get(s.getId())));
+        return skus;
+    }
+
+    /**
+     * 修改goods
+     * @param goodsVO
+     */
+    @Transactional
+    public void updateGoods(GoodsVO goodsVO) {
+        //删除stock
+        Sku sku = new Sku();
+        sku.setSpuId(goodsVO.getId());
+        List<Sku> skuList = skuMapper.select(sku);
+        if (!CollectionUtils.isEmpty(skuList)) {
+            skuMapper.delete(sku);
+            List<Long> skuIds = skuList.stream().map(Sku::getId).collect(Collectors.toList());
+            stockMapper.deleteByIdList(skuIds);
+        }
+
+        goodsVO.setValid(null);
+        goodsVO.setSaleable(null);
+        goodsVO.setCreateTime(null);
+        goodsVO.setLastUpdateTime(new Date());
+        int count = spuMapper.updateByPrimaryKeySelective(goodsVO);
+        if(count!=1){
+            throw new LyException(ExceptionEnums.GOODS_UPDATE_ERROR);
+        }
+        count = spuDetailMapper.updateByPrimaryKeySelective(goodsVO.getSpuDetail());
+        if(count!=1){
+            throw new LyException(ExceptionEnums.GOODS_UPDATE_ERROR);
+        }
+        //保存sku和stock
+        Long spuId = goodsVO.getId();
+        SpuDetail spuDetail = goodsVO.getSpuDetail();
+        spuDetail.setSpuId(spuId);
+        //修改detail
+        spuDetailMapper.insert(spuDetail);
+        //保存sku和stock
+        saveSkuAndStock(goodsVO);
 
     }
 }
