@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,10 +26,13 @@ public class CategoryController {
 
     }
 
-
+    /**
+     * 根据Id集合查找分类
+     * @param ids ids 必须加requestParam注解,否则会报错
+     * @return
+     */
     @GetMapping("list/ids")
-    public ResponseEntity<List<Category>> queryCategoryListByPid(List<Long> ids) {
-
-        return ResponseEntity.ok(categoryService.queryCategoryListByIds(ids));
+    public ResponseEntity<List<Category>> queryCategoryByIds(@RequestParam("ids") List<Long> ids) {
+        return ResponseEntity.ok(categoryService.queryCategoryByIds(ids));
     }
 }

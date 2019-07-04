@@ -16,10 +16,6 @@ import java.util.Map;
 public class FTPUtil {
 
 
-   // private static String ftpIp = PropertiesUtil.getProperty("ftp.server.ip");
-   // private static String ftpUser = PropertiesUtil.getProperty("ftp.user");
-   //private static String ftpPass = PropertiesUtil.getProperty("ftp.pass");
-
     public FTPUtil(String ip, int port, String user, String pwd) {
         this.ip = ip;
         this.port = port;
@@ -27,13 +23,7 @@ public class FTPUtil {
         this.pwd = pwd;
     }
 
-/*    public static boolean uploadFile(List<File> fileList) throws IOException {
-        FTPUtil ftpUtil = new FTPUtil(ftpIp, 21, ftpUser, ftpPass);
-           log.info("开始连接ftp服务器");
-        boolean result = ftpUtil.uploadFile("img", fileList);
-        log.info("开始连接ftp服务器,结束上传,上传结果:{}");
-        return result;
-    }*/
+
     public static boolean uploadFile(Map<String,String> ftpConfig, List<File> fileList) throws IOException {
         FTPUtil ftpUtil = new FTPUtil(ftpConfig.get("host"), Integer.parseInt(ftpConfig.get("port")), ftpConfig.get("username"), ftpConfig.get("password"));
         log.info("开始连接ftp服务器");
