@@ -1,6 +1,7 @@
 package com.leyou.common.vo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * @param <T>
  */
 @Data
+@NoArgsConstructor  //不加无参构造fegin调用失败
 public class PageResult<T> {
 
     private Long total; //总条数
