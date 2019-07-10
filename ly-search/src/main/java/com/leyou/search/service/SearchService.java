@@ -4,21 +4,33 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.leyou.common.enums.ExceptionEnums;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.utils.JsonUtils;
+import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.*;
 import com.leyou.search.client.BrandClient;
 import com.leyou.search.client.CategoryClient;
 import com.leyou.search.client.GoodsClient;
 import com.leyou.search.client.SpecificationClient;
 import com.leyou.search.pojo.Goods;
+import com.leyou.search.pojo.SearchRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class SearchService {
     @Autowired
@@ -29,6 +41,9 @@ public class SearchService {
     private SpecificationClient specificationClient;
     @Autowired
     private BrandClient brandClient;
+
+    @Autowired
+    private ElasticsearchTemplate template;
 
     public Goods buildGoods(Spu spu) {
         //查询分类
@@ -132,5 +147,64 @@ public class SearchService {
             }
         }
         return result;
+    }
+
+
+
+
+
+    public PageResult<Goods> search(SearchRequest request) {
+        String key = request.getKey();
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        int page = request.getPage() - 1;
+        int size = request.getDefaultRows();
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(new String[]{"id", "subTitle", "skus"}, new String[]{});
+        queryBuilder.withSourceFilter(fetchSourceFilter);
+        queryBuilder.withPageable(PageRequest.of(page, size));
+        queryBuilder.withQuery(QueryBuilders.matchQuery("all", key));
+        //此处获得分类参数
+        String categoryAggName = "category_agg";
+        queryBuilder.addAggregation(AggregationBuilders.terms(categoryAggName).field("cid3"));
+        String brandAggName = "brand_agg";
+        queryBuilder.addAggregation(AggregationBuilders.terms(brandAggName).field("brandId"));
+        AggregatedPage<Goods> result = template.queryForPage(queryBuilder.build(), Goods.class);
+        Aggregations aggs = result.getAggregations();
+        List<Category> categories = parseCategoryAgg(aggs.get(categoryAggName));
+
+        List<Brand> brands = parseBrandAgg(aggs.get(brandAggName));
+
+        long total = result.getTotalElements();
+        List<Goods> goods = result.getContent();
+
+        int totalPages = result.getTotalPages();
+        return new SearchResult(total, totalPages, goods, categories, brands);
+    }
+
+    private List<Brand> parseBrandAgg(LongTerms terms) {
+        try {
+            List<Long> brandIds = terms.getBuckets()
+                    .stream().map(a -> a.getKeyAsNumber().longValue())
+                    .collect(Collectors.toList());
+            List<Brand> brands = brandClient.queryBrandByIds(brandIds);
+            return brands;
+        } catch (Exception e) {
+            log.error("搜索服务查询品牌异常:",e);
+            return null;
+        }
+    }
+
+    private List<Category> parseCategoryAgg(LongTerms terms) {
+        try {
+            List<Long> categoryIds = terms.getBuckets().
+                    stream().map(a -> a.getKeyAsNumber().longValue())
+                    .collect(Collectors.toList());
+            return categoryClient.queryCategoryByIds(categoryIds);
+        } catch (Exception e) {
+            log.error("搜索服务查询分类异常:",e);
+            return null;
+        }
     }
 }

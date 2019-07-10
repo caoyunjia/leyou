@@ -5,4 +5,5 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient("LY-ITEM")
 public interface CategoryClient extends CategoryApi {
+
 }
