@@ -15,10 +15,12 @@ import com.leyou.search.pojo.SearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -84,8 +86,8 @@ public class SearchService {
         //查询详情
         SpuDetail spuDetail = goodsClient.queryDetailById(spu.getId());
         //获取所有的通用参数
-        Map<String, String> genericSpec = JsonUtils.parseMap(spuDetail.getGenericSpec(), String.class, String.class);
-        Map<String, List<String>> specialSpec = JsonUtils.nativeRead(spuDetail.getSpecialSpec(), new TypeReference<Map<String, List<String>>>() {
+        Map<Long, String> genericSpec = JsonUtils.parseMap(spuDetail.getGenericSpec(), Long.class, String.class);
+        Map<Long, List<String>> specialSpec = JsonUtils.nativeRead(spuDetail.getSpecialSpec(), new TypeReference<Map<Long, List<String>>>() {
         });
         HashMap<String, Object> specs = new HashMap<>();
         for (SpecParam param : params) {
@@ -94,13 +96,13 @@ public class SearchService {
             //如果是通用属性,从通用属性里取，否则从其他属性里取
             if (param.getGeneric()) {
                 if (param.getNumeric()) {
-                    //如果时数值
+                    //如果是数值
                     value = chooseSegment(value.toString(), param);
                 } else {
-                    value = genericSpec.get(key);
+                    value = genericSpec.get(param.getId());
                 }
             } else {
-                value = specialSpec.get(key);
+                value = specialSpec.get(param.getId());
             }
             specs.put(key, value);
         }
@@ -150,9 +152,11 @@ public class SearchService {
     }
 
 
-
-
-
+    /**
+     * 商品的查询
+     * @param request
+     * @return
+     */
     public PageResult<Goods> search(SearchRequest request) {
         String key = request.getKey();
         if (StringUtils.isBlank(key)) {
@@ -164,7 +168,8 @@ public class SearchService {
         FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(new String[]{"id", "subTitle", "skus"}, new String[]{});
         queryBuilder.withSourceFilter(fetchSourceFilter);
         queryBuilder.withPageable(PageRequest.of(page, size));
-        queryBuilder.withQuery(QueryBuilders.matchQuery("all", key));
+        QueryBuilder baseQuery = QueryBuilders.matchQuery("all", key);
+        queryBuilder.withQuery(baseQuery);
         //此处获得分类参数
         String categoryAggName = "category_agg";
         queryBuilder.addAggregation(AggregationBuilders.terms(categoryAggName).field("cid3"));
@@ -173,16 +178,54 @@ public class SearchService {
         AggregatedPage<Goods> result = template.queryForPage(queryBuilder.build(), Goods.class);
         Aggregations aggs = result.getAggregations();
         List<Category> categories = parseCategoryAgg(aggs.get(categoryAggName));
-
         List<Brand> brands = parseBrandAgg(aggs.get(brandAggName));
 
         long total = result.getTotalElements();
         List<Goods> goods = result.getContent();
 
         int totalPages = result.getTotalPages();
-        return new SearchResult(total, totalPages, goods, categories, brands);
+        List<Map<String, Object>> specs = new ArrayList<>();
+        if (categories != null && categories.size() == 1) {
+            //聚合分类
+            specs = buildSpecificationAgg(categories.get(0).getId(),baseQuery);
+        }
+
+        return new SearchResult(total, totalPages, goods, categories, brands,specs);
     }
 
+    /**
+     * 如果分类有且仅有一种,聚合该分类下的所有通用属性的聚合
+     * @param cid
+     * @param baseQuery
+     * @return
+     */
+    private List<Map<String, Object>> buildSpecificationAgg(Long cid, QueryBuilder baseQuery) {
+        ArrayList<Map<String,Object>> specs = new ArrayList<>();
+        List<SpecParam> specParams = specificationClient.queryParamsByCid(cid);
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        queryBuilder.withQuery(baseQuery);
+        for (SpecParam specParam : specParams) {
+            String name = specParam.getName();
+            queryBuilder.addAggregation(AggregationBuilders.terms(name).field("specs." + name + ".keyword"));
+        }
+        AggregatedPage<Goods> result = template.queryForPage(queryBuilder.build(), Goods.class);
+        Aggregations aggs = result.getAggregations();
+        for (SpecParam param : specParams) {
+            String name = param.getName();
+            StringTerms terms = aggs.get(name);
+            List<String> options = terms.getBuckets().stream().map(StringTerms.Bucket::getKeyAsString).collect(Collectors.toList());
+            HashMap<String, Object> spec = new HashMap<>();
+            spec.put(name, options);
+            specs.add(spec);
+        }
+        return specs;
+    }
+
+    /**
+     * 查找品牌的过滤条件的聚合
+     * @param terms
+     * @return
+     */
     private List<Brand> parseBrandAgg(LongTerms terms) {
         try {
             List<Long> brandIds = terms.getBuckets()
@@ -190,12 +233,19 @@ public class SearchService {
                     .collect(Collectors.toList());
             List<Brand> brands = brandClient.queryBrandByIds(brandIds);
             return brands;
+
+
         } catch (Exception e) {
             log.error("搜索服务查询品牌异常:",e);
             return null;
         }
     }
 
+    /**
+     * 查找商品分类的过滤条件的聚合
+     * @param terms
+     * @return
+     */
     private List<Category> parseCategoryAgg(LongTerms terms) {
         try {
             List<Long> categoryIds = terms.getBuckets().
