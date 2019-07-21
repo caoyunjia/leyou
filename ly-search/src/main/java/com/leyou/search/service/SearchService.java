@@ -213,10 +213,11 @@ public class SearchService {
         for (SpecParam param : specParams) {
             String name = param.getName();
             StringTerms terms = aggs.get(name);
-            List<String> options = terms.getBuckets().stream().map(StringTerms.Bucket::getKeyAsString).collect(Collectors.toList());
-            HashMap<String, Object> spec = new HashMap<>();
-            spec.put(name, options);
-            specs.add(spec);
+            HashMap<String, Object> map = new HashMap<>();
+            //此处返回页面所需要的k,options结构,让页面可以直接渲染
+            map.put("k", name);
+            map.put("options", terms.getBuckets().stream().map(StringTerms.Bucket::getKeyAsString).collect(Collectors.toList()));
+            specs.add(map);
         }
         return specs;
     }
