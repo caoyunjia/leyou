@@ -134,7 +134,7 @@ public class GoodsService {
     }
 
 
-    public List<Sku> querySkuBySpuId(Long spuId) {
+    public List<Sku> querySkusBySpuId(Long spuId) {
         Sku sku = new Sku();
         sku.setSpuId(spuId);
         List<Sku> skus = skuMapper.select(sku);
@@ -188,5 +188,18 @@ public class GoodsService {
         //保存sku和stock
         saveSkuAndStock(goodsVO);
 
+    }
+
+    public Spu querySpuBySpuId(Long id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu == null) {
+            throw new LyException(ExceptionEnums.GOODS_SPU_NOT_FOUND);
+        }
+        List<Sku> skus = querySkusBySpuId(id);
+        spu.setSkus(skus);
+        SpuDetail spuDetail = queryDetailById(id);
+        spu.setSpuDetail(spuDetail);
+
+        return spu;
     }
 }

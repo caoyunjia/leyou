@@ -15,6 +15,7 @@ import com.leyou.search.pojo.SearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -168,7 +169,7 @@ public class SearchService {
         FetchSourceFilter fetchSourceFilter = new FetchSourceFilter(new String[]{"id", "subTitle", "skus"}, new String[]{});
         queryBuilder.withSourceFilter(fetchSourceFilter);
         queryBuilder.withPageable(PageRequest.of(page, size));
-        QueryBuilder baseQuery = QueryBuilders.matchQuery("all", key);
+        QueryBuilder baseQuery = buildBaseQuery(request);
         queryBuilder.withQuery(baseQuery);
         //此处获得分类参数
         String categoryAggName = "category_agg";
@@ -242,6 +243,22 @@ public class SearchService {
         }
     }
 
+
+    private QueryBuilder buildBaseQuery(SearchRequest request) {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        queryBuilder.must(QueryBuilders.matchQuery("all", request.getKey()));
+        Map<String, String> filter = request.getFilter();
+        for (Map.Entry<String, String> entry : filter.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (!"cid3".equals(key) && !"brandId".equals(key)) {
+                //如果不是分类和品牌,需要用keyword去查询
+                key = "specs." + key + ".keyword";
+            }
+            queryBuilder.filter(QueryBuilders.termQuery(key, value));
+        }
+        return queryBuilder;
+    }
     /**
      * 查找商品分类的过滤条件的聚合
      * @param terms
@@ -252,7 +269,7 @@ public class SearchService {
             List<Long> categoryIds = terms.getBuckets().
                     stream().map(a -> a.getKeyAsNumber().longValue())
                     .collect(Collectors.toList());
-            return categoryClient.queryCategoryByIds(categoryIds);
+            return categoryClient.queryCategoryListByPid(categoryIds);
         } catch (Exception e) {
             log.error("搜索服务查询分类异常:",e);
             return null;

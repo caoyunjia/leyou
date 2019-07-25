@@ -1,6 +1,7 @@
 package com.leyou.search.pojo;
 
 
+import java.util.Map;
 
 public class SearchRequest {
     private String key;
@@ -9,6 +10,7 @@ public class SearchRequest {
     private static final Integer DEFAULT_ROWS=20;
     private static final Integer DEFAULT_PAGE=1;
 
+    private Map<String, String> filter;
     public String getKey() {
         return key;
     }
@@ -34,5 +36,13 @@ public class SearchRequest {
 
     public static Integer getDefaultPage() {
         return DEFAULT_PAGE;
+    }
+
+    public Map<String, String> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(Map<String, String> filter) {
+        this.filter = filter;
     }
 }

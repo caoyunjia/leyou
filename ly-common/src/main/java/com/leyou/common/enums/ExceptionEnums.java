@@ -15,6 +15,7 @@ public enum  ExceptionEnums {
     GOODS_NOT_FOUND(404,"商品不存在"),
     GOODS_DETAIL_NOT_FOUND(404,"商品详情不存在"),
     GOODS_SKU_NOT_FOUND(404,"商品SKU不存在"),
+    GOODS_SPU_NOT_FOUND(404,"商品SPU不存在"),
     GOODS_STOCK_NOT_FOUND(404,"商品STOCK不存在"),
     BRAND_SAVE_ERROR(500,"品牌新增失败" ),
     GOODS_SAVE_ERROR(500,"商品新增失败" ),

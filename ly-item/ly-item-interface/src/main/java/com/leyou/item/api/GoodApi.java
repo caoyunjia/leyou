@@ -25,4 +25,8 @@ public interface GoodApi {
             @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
             @RequestParam(value = "key", required = false) String key,
             @RequestParam(value = "saleable", required = false) Boolean saleable);
+
+
+    @GetMapping("spu/{id}")
+    Spu querySpuById(@PathVariable(name = "id") Long id);
 }

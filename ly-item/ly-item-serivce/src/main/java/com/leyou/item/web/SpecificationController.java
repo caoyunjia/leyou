@@ -60,4 +60,11 @@ public class SpecificationController {
         return ResponseEntity.ok(specParams);
     }
 
+
+    @GetMapping("/group")
+    public ResponseEntity<List<SpecGroup>> queryGroupAndParamByCid(@RequestParam(value = "cid") Long cid){
+
+
+        return ResponseEntity.ok(specificationService.queryGroupAndParamByCid(cid));
+    }
 }
