@@ -62,10 +62,20 @@ public class PageService
         Context context = new Context();
         context.setVariables(loadData(spuId));
         File dest = new File("/home/elk/xx", spuId + ".html");
+        if(dest.exists()){
+            dest.delete();
+        }
         try(PrintWriter writer = new PrintWriter(dest, "UTF-8")){
             templateEngine.process("item",context ,writer);
         }catch (Exception e){
             log.error("静态页服务生成静态页异常",e);
+        }
+    }
+
+    public void deletePage(Long spuId) {
+        File dest = new File("/home/elk/xx", spuId + ".html");
+        if(dest.exists()){
+            dest.delete();
         }
     }
 }
