@@ -1,5 +1,7 @@
 package com.leyou.user.service;
 
+import com.leyou.common.enums.ExceptionEnums;
+import com.leyou.common.exception.LyException;
 import com.leyou.common.utils.CodecUtils;
 import com.leyou.user.mapper.UserMapper;
 import com.leyou.user.pojo.User;
@@ -34,7 +36,7 @@ public class UserService {
                 record.setPhone(data);
                 break;
             default:
-                return null;
+                throw new LyException(ExceptionEnums.INVALID_PARAM_ERROR);
         }
         return this.userMapper.selectCount(record) == 0;
     }
