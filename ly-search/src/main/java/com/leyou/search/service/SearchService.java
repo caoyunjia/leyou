@@ -12,6 +12,7 @@ import com.leyou.search.client.GoodsClient;
 import com.leyou.search.client.SpecificationClient;
 import com.leyou.search.pojo.Goods;
 import com.leyou.search.pojo.SearchRequest;
+import com.leyou.search.repository.GoodsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -47,6 +48,9 @@ public class SearchService {
 
     @Autowired
     private ElasticsearchTemplate template;
+
+    @Autowired
+    private GoodsRepository goodsRepository;
 
     public Goods buildGoods(Spu spu) {
         //查询分类
@@ -274,5 +278,17 @@ public class SearchService {
             log.error("搜索服务查询分类异常:",e);
             return null;
         }
+    }
+
+
+    public void createOrUpdateIndex(Long spuId) {
+        Spu spu = goodsClient.querySpuById(spuId);
+        Goods goods = buildGoods(spu);
+        goodsRepository.save(goods);
+    }
+
+    public void deleteIndex(Long spuId) {
+        goodsRepository.deleteById(spuId);
+
     }
 }
