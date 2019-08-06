@@ -12,6 +12,7 @@ import com.leyou.item.mapper.StockMapper;
 import com.leyou.item.pojo.*;
 import com.leyou.item.vo.GoodsVO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,9 @@ public class GoodsService {
     private CategoryService categoryService;
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     public PageResult<Spu> querySpusByPage(Integer page, Integer rows, String sortBy, Boolean desc, String key, Boolean saleable) {
         PageHelper.startPage(page, rows);
@@ -92,6 +96,8 @@ public class GoodsService {
         spuDetailMapper.insert(spuDetail);
 
        saveSkuAndStock(goodsVO);
+        //保存后生成模板
+        amqpTemplate.convertAndSend("item.insert",goodsVO.getId());
     }
 
 
@@ -188,6 +194,8 @@ public class GoodsService {
         //保存sku和stock
         saveSkuAndStock(goodsVO);
 
+        //保存后生成模板
+        amqpTemplate.convertAndSend("item.update",goodsVO.getId());
     }
 
     public Spu querySpuBySpuId(Long id) {

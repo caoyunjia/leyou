@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: ly-sms
+  redis:
+    host: 192.168.56.101
+  rabbitmq:
+    host: 192.168.56.101
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
 eureka:
   client:
     service-url:
@@ -16,3 +23,9 @@ info:
   build.artifactId: $project.artifactId$
   build.version: $project.version$
 
+ly:
+  sms:
+    accessKeyId: LTAI1IRnngq22AhD # 你自己的accessKeyId
+    accessKeySecret: srkOSHeo4B8I94wVk3ktHqOKZS9fzq # 你自己的AccessKeySecret
+    signName: 乐优商城 # 签名名称
+    verifyCodeTemplate: SMS_171858128 # 模板名称

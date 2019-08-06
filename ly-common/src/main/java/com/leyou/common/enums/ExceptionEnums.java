@@ -23,7 +23,8 @@ public enum  ExceptionEnums {
     SPEC_GROUP_SAVE_ERROR(500,"商品规格组新增失败" ),
     SPEC_PARAM_SAVE_ERROR(500,"商品规格参数新增失败" ),
     UPLOAD_FILE_ERROR(500,"文件上传失败" ),
-    INVALID_FILE_ERROR(500,"无效的文件类型" );
+    INVALID_FILE_ERROR(500,"无效的文件类型" ),
+    INVALID_PARAM_ERROR(400,"参数类型有误" );
     private int code;
     private String msg;
 
