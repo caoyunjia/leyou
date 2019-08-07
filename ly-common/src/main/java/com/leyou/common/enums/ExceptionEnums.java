@@ -24,7 +24,9 @@ public enum  ExceptionEnums {
     SPEC_PARAM_SAVE_ERROR(500,"商品规格参数新增失败" ),
     UPLOAD_FILE_ERROR(500,"文件上传失败" ),
     INVALID_FILE_ERROR(500,"无效的文件类型" ),
-    INVALID_PARAM_ERROR(400,"参数类型有误" );
+    INVALID_USER_DATA_TYPE(400,"用户数据类型无效" ),
+    INVALID_USER_PASSWORD(400,"用户名或密码错误" ),
+    INVALID_VERIFY_CODE(400, "无效的验证码");
     private int code;
     private String msg;
 

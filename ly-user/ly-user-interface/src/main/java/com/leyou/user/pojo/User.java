@@ -3,9 +3,8 @@ package com.leyou.user.pojo;
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
+import tk.mybatis.mapper.annotation.KeySql;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
@@ -16,7 +15,7 @@ import java.util.Date;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @KeySql(useGeneratedKeys = true)
     private Long id;
     @Length(min = 4, max = 30, message = "用户名只能在4~30位之间")
     private String username;// 用户名

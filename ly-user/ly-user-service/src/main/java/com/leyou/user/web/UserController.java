@@ -35,6 +35,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
+    /**
+     * 发送验证码
+     */
+    @PostMapping("code")
+    public ResponseEntity<Void> sendCode(@RequestParam(value = "phone") String phone){
+        userService.sendCode(phone);
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * 校验用户名或者电话是否唯一
      * @param data
@@ -59,13 +69,8 @@ public class UserController {
      * @return
      */
     @GetMapping("query")
-    public ResponseEntity<User> queryUser(String username,String password){
-
-        User user = userService.queryUser(username, password);
-        if(user==null){
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> queryUserByUsernameAndPassword(String username,String password){
+        return ResponseEntity.ok(userService.queryUserByUsernameAndPassword(username, password));
 
     }
 }
