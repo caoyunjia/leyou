@@ -4,9 +4,9 @@ spring:
   application:
     name: ly-auth-service
   datasource:
-    url: jdbc:mysql://47.98.114.21:3306/leyou
+    url: jdbc:mysql://192.168.1.8/leyou
     username: root
-    password: 123456
+    password: root
 #redis地址
   reids:
     host: 47.98.114.21

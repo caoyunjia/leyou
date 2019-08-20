@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8087
 spring:
   application:
     name: ly-auth
@@ -19,7 +19,7 @@ info:
   build.artifactId: $project.artifactId$
   build.version: $project.version$
 
-leyou:
+ly:
   jwt:
     secret: leyou@Login(Auth}*^31)&heiMa% # 登录校验的密钥
     pubKeyPath: C:\\tmp\\rsa\\rsa.pub # 公钥地址
