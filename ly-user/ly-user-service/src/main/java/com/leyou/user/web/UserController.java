@@ -14,7 +14,6 @@ import javax.validation.Valid;
  * 注册用户
  */
 @Controller
-@RequestMapping("user")
 public class UserController {
 
     @Autowired
