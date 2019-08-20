@@ -69,7 +69,8 @@ public class UserController {
      * @return
      */
     @GetMapping("query")
-    public ResponseEntity<User> queryUserByUsernameAndPassword(String username,String password){
+    public ResponseEntity<User> queryUserByUsernameAndPassword(@RequestParam(value = "username") String username,
+                                                               @RequestParam(value = "password") String password){
         return ResponseEntity.ok(userService.queryUserByUsernameAndPassword(username, password));
 
     }
