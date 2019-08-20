@@ -27,6 +27,8 @@ zuul:
       serviceId: ly-upload
       path: /upload/**
       stripPrefix: false
+  add-host-header: true #添加头信息
+  sensitive-headers:  #放行所有头
 ribbon:
   ConnectTimeout: 3000 # 连接超时时间(ms)
   ReadTimeout: 5500 # 通信超时时间(ms)
