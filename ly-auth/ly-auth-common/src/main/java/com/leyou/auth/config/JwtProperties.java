@@ -17,11 +17,12 @@ public class JwtProperties {
     private String secret;
     private String pubKeyPath;
     private String priKeyPath;
-    private int expire;
-    private PublicKey publicKey;
-    private PrivateKey privateKey;
+    private int expire;  //过期时间
+    private PublicKey publicKey;  //公钥
+    private PrivateKey privateKey; //私钥
 
-
+    private String cookieName;
+    private Integer cookieMaxAge;
     /**
      * @PostContruct：在构造方法执行之后执行该方法
      */
