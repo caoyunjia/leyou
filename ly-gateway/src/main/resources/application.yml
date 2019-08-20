@@ -21,6 +21,8 @@ zuul:
   routes:
     ly-item: /item/**
     ly-search: /search/**
+    ly-user: /user/**
+    ly-auth: /auth/**
     ly-upload:
       serviceId: ly-upload
       path: /upload/**
