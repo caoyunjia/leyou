@@ -34,12 +34,6 @@ public class UserService {
 
     public Boolean checkData(String data, Integer type) {
 
-        // 存储数据
-        this.redisTemplate.opsForValue().set("key1", "value1");
-        // 获取数据
-        String val = this.redisTemplate.opsForValue().get("key1");
-        System.out.println("val = " + val);
-
         User record = new User();
         switch (type) {
             case 1:
