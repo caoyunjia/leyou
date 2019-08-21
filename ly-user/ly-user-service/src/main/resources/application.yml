@@ -2,14 +2,14 @@ server:
   port: 8085
 spring:
   application:
-    name: ly-auth-service
+    name: ly-user
   datasource:
     url: jdbc:mysql://192.168.1.8/leyou
     username: root
     password: root
 #redis地址
   reids:
-    host: 47.98.114.21
+    host: 192.168.1.8
 eureka:
   client:
     service-url:
