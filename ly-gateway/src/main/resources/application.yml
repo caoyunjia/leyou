@@ -42,3 +42,15 @@ hystrix:
         isolation:
           thread:
             timeoutInMillisecond: 6000 # 熔断超时时长：5000ms
+ly:
+  jwt:
+    pubKeyPath: C:\\tmp\\rsa\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN
+  filter:
+    allowPaths:
+      - /api/auth
+      - /api/search
+      - /api/user/register
+      - /api/user/code
+      - /api/user/check
+      - /api/item
