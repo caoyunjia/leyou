@@ -1,19 +1,10 @@
 server:
   port: 8082
 spring:
-  application:
-    name: ly-upload
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true     #访问路径可以显示IP地址
 info:
   app.name: ly-upload
   company.name: www.leyou.com

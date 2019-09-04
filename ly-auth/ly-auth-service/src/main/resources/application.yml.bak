@@ -1,24 +1,10 @@
 server:
   port: 8087
-spring:
-  application:
-    name: ly-auth
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true     #访问路径可以显示IP地址
-    lease-renewal-interval-in-seconds: 5 # 每隔5秒发送一次心跳
-    lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
-
 info:
   app.name: ly-auth
   company.name: www.leyou.com
   build.artifactId: $project.artifactId$
   build.version: $project.version$
-
 ly:
   jwt:
     secret: leyou@Login(Auth}*^31)&heiMa% # 登录校验的密钥

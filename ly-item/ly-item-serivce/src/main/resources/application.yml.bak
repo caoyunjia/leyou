@@ -1,12 +1,11 @@
 server:
   port: 8001
 spring:
-  application:
-    name: ly-item
   datasource:
     url: jdbc:mysql://192.168.1.8/leyou
     username: root
     password: root
+    driver-class-name: com.mysql.jdbc.Driver
   rabbitmq:
     host: 192.168.56.101
     username: leyou
@@ -20,14 +19,6 @@ spring:
         multiplier: 2
       exchange: ly.item.exchange
     publisher-confirms: true
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true     #访问路径可以显示IP地址
-
 info:
   app.name: ly-item
   company.name: www.leyou.com

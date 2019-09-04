@@ -1,0 +1,15 @@
+server:
+  port: 8083
+spring:
+  data:
+    elasticsearch:
+       cluster-name: elasticsearch
+       clusterNodes: 192.168.1.8:9300
+info:
+  app.name: ly-search
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000

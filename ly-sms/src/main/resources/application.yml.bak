@@ -1,8 +1,6 @@
 server:
   port: 8086
 spring:
-  application:
-    name: ly-sms
   redis:
     host: 192.168.56.101
   rabbitmq:
@@ -10,13 +8,6 @@ spring:
     username: leyou
     password: leyou
     virtual-host: /leyou
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true     #访问路径可以显示IP地址
 info:
   app.name: ly-sms
   company.name: www.leyou.com

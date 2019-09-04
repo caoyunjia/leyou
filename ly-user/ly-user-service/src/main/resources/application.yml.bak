@@ -1,0 +1,18 @@
+server:
+  port: 8085
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.1.8/leyou
+    username: root
+    password: root
+#redis地址
+  reids:
+    host: 192.168.1.8
+info:
+  app.name: ly-user-service
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -11,8 +11,17 @@
 
     <groupId>com.leyou.service</groupId>
     <artifactId>ly-item-serivce</artifactId>
-
     <dependencies>
+        <!-- 1. nacos-服务发现功能依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- 2. nacos-配置管理功能依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.leyou.service</groupId>
             <artifactId>ly-item-interface</artifactId>
@@ -23,12 +32,6 @@
             <groupId>com.leyou.common</groupId>
             <artifactId>ly-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <!--Eureka客户端-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <!-- actuator监控信息完善 -->
         <dependency>

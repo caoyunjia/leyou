@@ -13,11 +13,15 @@
     <artifactId>ly-user-service</artifactId>
 
     <dependencies>
-
-        <!--Eureka客户端-->
+        <!-- 1. nacos-服务发现功能依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- 2. nacos-配置管理功能依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <!-- actuator监控信息完善 -->
         <dependency>
