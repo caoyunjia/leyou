@@ -148,13 +148,17 @@ public class GoodsService {
             throw new LyException(ExceptionEnums.GOODS_SKU_NOT_FOUND);
         }
         List<Long> ids = skus.stream().map(Sku::getId).collect(Collectors.toList());
+        loadStockInSku(skus, ids);
+        return skus;
+    }
+
+    private void loadStockInSku(List<Sku> skus, List<Long> ids) {
         List<Stock> stocks = stockMapper.selectByIdList(ids);
-        if (CollectionUtils.isEmpty(skus)) {
+        if (CollectionUtils.isEmpty(stocks)) {
             throw new LyException(ExceptionEnums.GOODS_STOCK_NOT_FOUND);
         }
         Map<Long, Integer> stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
         skus.forEach(s -> s.setStock(stockMap.get(s.getId())));
-        return skus;
     }
 
     /**
@@ -209,5 +213,14 @@ public class GoodsService {
         spu.setSpuDetail(spuDetail);
 
         return spu;
+    }
+
+    public List<Sku> querySkusByIds(List<Long> ids) {
+        List<Sku> skus = skuMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(skus)) {
+            throw new LyException(ExceptionEnums.GOODS_SKU_NOT_FOUND);
+        }
+        loadStockInSku(skus,ids);
+        return skus;
     }
 }

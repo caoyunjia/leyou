@@ -59,6 +59,12 @@ public class GoodsController {
     }
 
 
+    @GetMapping("sku/list/ids")
+    public ResponseEntity<List<Sku>> querySkusByIds(@RequestParam(value = "ids") List<Long> ids){
+        return ResponseEntity.ok(goodsService.querySkusByIds(ids));
+    }
+
+
     @GetMapping("spu/{id}")
     public ResponseEntity<Spu> querySpuById(@PathVariable(name = "id") Long id){
         return ResponseEntity.ok(goodsService.querySpuBySpuId(id));
