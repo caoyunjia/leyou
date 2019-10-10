@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 
-public interface BrandMapper extends BaseMapper<Brand,Long> {
+public interface BrandMapper extends BaseMapper<Brand> {
 
     @Insert("insert into tb_category_brand(category_id,brand_id)values(#{cid},#{bid})")
     int insertCategoryBrand(@Param("cid")Long cid, @Param("bid") Long bid);

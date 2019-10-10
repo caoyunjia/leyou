@@ -1,7 +1,7 @@
 package com.leyou.user.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import tk.mybatis.mapper.annotation.KeySql;
 
