@@ -5,8 +5,13 @@ spring:
     url: jdbc:mysql://192.168.1.8/leyou
     username: root
     password: root
+  rabbitmq:
+    host: 47.98.114.21
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
 #redis地址
-  reids:
+  redis:
     host: 192.168.1.8
 info:
   app.name: ly-user-service

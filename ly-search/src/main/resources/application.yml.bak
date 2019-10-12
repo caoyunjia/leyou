@@ -5,6 +5,11 @@ spring:
     elasticsearch:
        cluster-name: elasticsearch
        clusterNodes: 192.168.1.8:9300
+  rabbitmq:
+    host: 192.168.1.8
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
 info:
   app.name: ly-search
   company.name: www.leyou.com
