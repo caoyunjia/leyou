@@ -23,7 +23,8 @@ public class SmsTest {
         HashMap<String, String> msg = new HashMap<>();
         msg.put("phone","15517555778");
         msg.put("code", "12345");
-        amqpTemplate.convertAndSend("ly.sms.exchange", "sms.verify.code.queue", msg);
+        amqpTemplate.convertAndSend("ly.sms.exchange", "sms.verify.code", msg);
+
 
     }
 
