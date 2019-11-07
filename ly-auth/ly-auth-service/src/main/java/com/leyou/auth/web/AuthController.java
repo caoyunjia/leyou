@@ -7,6 +7,7 @@ import com.leyou.auth.utils.JwtUtils;
 import com.leyou.common.enums.ExceptionEnums;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.utils.CookieUtils;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,6 +35,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("accredit")
+    @ApiOperation(value = "登录授权，登录成功后并回写Cookie")
     public ResponseEntity<Void> authentication(@RequestParam(value = "username") String username,
                                                @RequestParam(value = "password") String password,
                                                HttpServletRequest request,
@@ -56,6 +58,7 @@ public class AuthController {
      * @return
      */
     @GetMapping("verify")
+    @ApiOperation(value = "验证Cookie里的信息，正确的话刷新Cookie")
     public ResponseEntity<UserInfo> verify(@CookieValue("LY_TOKEN") String token, HttpServletRequest request,
                                            HttpServletResponse response){
         if(StringUtils.isBlank(token)){
