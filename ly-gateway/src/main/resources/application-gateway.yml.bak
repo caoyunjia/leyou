@@ -1,0 +1,47 @@
+server:
+  port: 10010
+info:
+  app.name: ly-gateway
+  company.name: www.leyou.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+       - id: item
+         uri: lb://ly-item
+         predicates:
+           - Method=GET,POST
+           - Path=/item/**
+         filters:
+           - PrefixPath=/api
+           - StripPrefix=2
+ribbon:
+  ConnectTimeout: 3000 # 连接超时时间(ms)
+  ReadTimeout: 5500 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 0 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 0 # 同一实例的重试次数
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 6000 # 熔断超时时长：5000ms
+ly:
+  jwt:
+    pubKeyPath: C:\\tmp\\rsa\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN
+  filter:
+    allowPaths:
+      - /api/auth
+      - /api/search
+      - /api/user/register
+      - /api/user/code
+      - /api/user/check
+      - /api/item

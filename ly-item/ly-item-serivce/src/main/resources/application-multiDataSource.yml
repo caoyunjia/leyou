@@ -1,11 +1,17 @@
 server:
   port: 8001
 spring:
-  datasource:
-    url: jdbc:mysql://192.168.1.8/leyou
-    username: root
-    password: root
-    driver-class-name: com.mysql.jdbc.Driver
+  local-datasource:
+      jdbc-url: jdbc:mysql://192.168.1.8/leyou
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+  remote-datasource:
+      jdbc-url: jdbc:mysql://47.98.114.21/test
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+
   rabbitmq:
     host: 47.98.114.21
     username: leyou
