@@ -20,6 +20,16 @@
         <module>ly-page</module>
     </modules>
     <packaging>pom</packaging>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://49.235.45.220:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://49.235.45.220:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -97,6 +107,7 @@
     </dependencies>
     <build>
         <finalName>leyou</finalName>
+        <defaultGoal>compile</defaultGoal>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
