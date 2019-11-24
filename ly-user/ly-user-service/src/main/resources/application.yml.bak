@@ -2,7 +2,7 @@ server:
   port: 8085
 spring:
   datasource:
-    url: jdbc:mysql://192.168.1.8/leyou
+    url: jdbc:mysql://49.235.45.220/leyou
     username: root
     password: root
   rabbitmq:
@@ -12,7 +12,7 @@ spring:
     virtual-host: /leyou
 #redis地址
   redis:
-    host: 192.168.1.8
+    host: 49.235.45.220
 info:
   app.name: ly-user-service
   company.name: www.leyou.com
